@@ -1,0 +1,13 @@
+{
+    "encryption": "AES-256-GCM",
+    "kms": "internal-mock",
+    "debug_protection": true,
+    "logging_mode": "secure",
+    "adaptive_threat_memory": true,
+    "analyzer_mode": "ml+cache",
+    "compliance": [
+        "NIST SP800-53",
+        "OWASP",
+        "MITRE ATT&CK"
+    ]
+}

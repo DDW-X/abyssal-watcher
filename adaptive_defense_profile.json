@@ -1,0 +1,42 @@
+{
+  "runtime_behavior_tracking": true,
+  "anomaly_threshold": 0.93,
+  "auto_response_moaes-256-gcm": {
+    "mild": "log_and_flag",
+    "moderate": "isolate_and_alert",
+    "severe": "shutdown_and_self_erase"
+  },
+  "threat_memory_engine": {
+    "enabled": true,
+    "persistence": "encrypted_local_blob",
+    "decay_rate": 0.015,
+    "pattern_weighting": {
+      "network_anomaly": 1.0,
+      "syscall_frequency_shift": 0.85,
+      "crypto_misuse": 1.25
+    }
+  },
+  "network_profile": {
+    "trusted_domains": [
+      "updates.aw.local",
+      "inference.aw.sec"
+    ],
+    "anomalous_threshold_kbps": 64,
+    "dns_tunneling_detection": true,
+    "payload_entropy_monitor": true
+  },
+  "logging_behavior": {
+    "adaptive_rate": true,
+    "sensitive_data_masking": true,
+    "remote_sync": false
+  },
+  "compatibility": {
+    "k8s_ready": true,
+    "baremetal_mode": true,
+    "cross_platform": [
+      "linux_x64",
+      "windows_x64",
+      "macos_arm64"
+    ]
+  }
+}

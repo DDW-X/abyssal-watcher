@@ -1,0 +1,9 @@
+
+{
+  "signatures": [
+    "unusual_port_usage",
+    "kernel_memory_patch",
+    "code_injection_detected",
+    "unauthorized_root_access"
+  ]
+}

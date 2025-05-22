@@ -1,2 +1,20 @@
-# abyssal-watcher
-Abyssal Watcher is an advanced STUXNET-resistant threat detection core, architected in Rust. It delivers real-time threat intelligence, dynamic cryptographic layers, and native SIEM/syslog integration, optimized for mission-critical cyber defense deployments.
+# Abyssal Watcher
+
+A hardened security watchdog framework with STUXNET-resistant architecture.
+
+## Features
+- Real-time threat detection API
+- SIEM/syslog integration
+- Dashboard with React + Tailwind
+- CI/CD ready (GitHub Actions)
+- Dockerized deployment
+
+## Run
+
+```bash
+docker-compose -f docker/docker-compose.yml up --build
+```
+
+## License
+
+Apache-2.0
