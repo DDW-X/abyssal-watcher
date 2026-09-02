@@ -23,7 +23,7 @@ async fn receive_threat(info: web::Json<ThreatInput>) -> impl Responder {
     HttpResponse::Ok().body("Threat logged")
 }
 
-pub fn get_service() -> App<()> {
+pub fn get_service() -> App<impl actix_web::dev::ServiceFactory<actix_web::dev::ServiceRequest, Config = (), Response = actix_web::dev::ServiceResponse, Error = actix_web::Error, InitError = ()>> {
     App::new()
         .service(status)
         .service(receive_threat)
