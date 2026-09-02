@@ -1,4 +1,4 @@
-use syslog::{Facility, Formatter3164};
+use syslog::{Facility, Formatter3164, BasicLogger};
 use log::{info, warn};
 
 pub fn init_syslog() {
@@ -11,7 +11,8 @@ pub fn init_syslog() {
 
     match syslog::unix(formatter) {
         Ok(logger) => {
-            let _ = log::set_boxed_logger(Box::new(logger))
+            let basic_logger = BasicLogger::new(logger);
+            let _ = log::set_boxed_logger(Box::new(basic_logger))
                 .map(|()| log::set_max_level(log::LevelFilter::Info));
         }
         Err(e) => {

@@ -1,4 +1,4 @@
-use actix_web::{get, post, web, App, HttpServer, Responder, HttpResponse};
+use actix_web::{get, post, web, HttpServer, Responder, HttpResponse, App};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -23,14 +23,13 @@ async fn receive_threat(info: web::Json<ThreatInput>) -> impl Responder {
     HttpResponse::Ok().body("Threat logged")
 }
 
-pub fn get_service() -> App<()> {
-    App::new()
-        .service(status)
-        .service(receive_threat)
+pub fn config_app(cfg: &mut web::ServiceConfig) {
+    cfg.service(status)
+       .service(receive_threat);
 }
 
 pub async fn run_api() -> std::io::Result<()> {
-    HttpServer::new(|| get_service())
+    HttpServer::new(|| App::new().configure(config_app))
         .bind(("0.0.0.0", 8080))?
         .run()
         .await

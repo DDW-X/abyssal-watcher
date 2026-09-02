@@ -1,0 +1,22 @@
+use aes_gcm::{Aes256Gcm, Key, Nonce};
+use aes_gcm::aead::{Aead, KeyInit};
+use std::fs::OpenOptions;
+use std::io::Write;
+use crate::infra::secure_kms::{generate_key, generate_nonce};
+
+pub fn log_secure(message: &str) {
+    let key_bytes = generate_key();
+    let nonce_bytes = generate_nonce();
+
+    let key = Key::<Aes256Gcm>::from_slice(&key_bytes);
+    let cipher = Aes256Gcm::new(key);
+    let nonce = Nonce::from_slice(&nonce_bytes);
+
+    let ciphertext = cipher.encrypt(nonce, message.as_bytes()).unwrap();
+    let mut file = OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open("secure.log")
+        .unwrap();
+    file.write_all(&ciphertext).unwrap();
+}
