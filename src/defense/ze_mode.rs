@@ -1,4 +1,3 @@
-
 pub struct ZEProtector;
 
 impl ZEProtector {
@@ -10,6 +9,6 @@ impl ZEProtector {
 
     pub fn inspect(data: &str) -> bool {
         // بررسی تهدیدهای پیچیده
-        data.contains("rce") || data.contains("exploit") || data.contains("apt")
+        data.contains("rce") || data.contains("exploit") || data.contains("apt") || data.contains("fileless_malware")
     }
 }

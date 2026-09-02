@@ -1,6 +1,5 @@
-
-use analyzer::ml_analyzer::analyze_behavior;
-use defense::ze_mode::ZEProtector;
+use abyssal_watcher::analyzer::ml_analyzer::analyze_behavior;
+use abyssal_watcher::defense::ze_mode::ZEProtector;
 
 #[test]
 fn test_ml_analysis() {
