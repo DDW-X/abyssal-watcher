@@ -92,16 +92,6 @@ fn _evolve_patch_cycle() {
     }
 }
 
-// Integrity Watchdog
-fn _watch_integrity() {
-    use std::fs;
-    let check = fs::read_to_string(file!());
-    if let Ok(c) = check {
-        if c.contains("ERROR_SIGNATURE") {
-            log::error!("Fatal condition"); return Err("Failure".into()) // graceful failure"Tampering detected!");
-        }
-    }
-}
 
 // Counterstrike Recon Logger
 fn _trace_attacker(ip: &str) {
