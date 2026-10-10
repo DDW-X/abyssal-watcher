@@ -22,10 +22,12 @@ pub fn init_syslog() {
     }
 }
 
+#[allow(dead_code)]
 pub fn log_threat(signature: &str) {
     info!("Threat detected: {}", signature);
 }
 
+#[allow(dead_code)]
 pub fn log_warning(msg: &str) {
     warn!("{}", msg);
 }
