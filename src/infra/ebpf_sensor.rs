@@ -18,7 +18,7 @@ impl EbpfSensor {
         // let mut bpf = Ebpf::load_file("path/to/bpf/program")?;
 
         // Let's create an empty bpf for now since we don't have the bpf program compiled
-        let bpf = Ebpf::load(&[])?;
+        let bpf = Ebpf::load(&[]).map_err(|_| anyhow::anyhow!("Failed to initialize sensor telemetry"))?;
 
         Ok(Self { bpf })
     }
@@ -26,7 +26,7 @@ impl EbpfSensor {
     pub fn start(&mut self) -> anyhow::Result<()> {
         info!("Starting eBPF Sensor telemetry gathering...");
         // Setup BpfLogger
-        let _logger = EbpfLogger::init(&mut self.bpf)?;
+        let _logger = EbpfLogger::init(&mut self.bpf).map_err(|_| anyhow::anyhow!("Failed to setup telemetry logging"))?;
 
         // Example: attach to a tracepoint (e.g., sys_enter_execve)
         // let program: &mut TracePoint = self.bpf.program_mut("sys_enter_execve").unwrap().try_into()?;
