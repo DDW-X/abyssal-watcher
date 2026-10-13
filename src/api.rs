@@ -19,12 +19,18 @@ async fn status() -> impl Responder {
 
 #[post("/api/threats")]
 async fn receive_threat(info: web::Json<ThreatInput>) -> impl Responder {
-    println!("Threat received: {}", info.signature);
+    log::info!("Threat received: {}", info.signature);
     HttpResponse::Ok().body("Threat logged")
 }
 
 pub fn get_service() -> App<impl actix_web::dev::ServiceFactory<actix_web::dev::ServiceRequest, Config = (), Response = actix_web::dev::ServiceResponse, Error = actix_web::Error, InitError = ()>> {
     App::new()
+        .app_data(web::JsonConfig::default().limit(4096).error_handler(|err, _req| {
+            actix_web::error::InternalError::from_response(
+                err,
+                HttpResponse::BadRequest().body("Invalid input")
+            ).into()
+        }))
         .service(status)
         .service(receive_threat)
 }
