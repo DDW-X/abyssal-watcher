@@ -9,7 +9,9 @@ fn main() {
         println!("[ALERT] Debugger detected. Exiting."); return;
     }
     ZEProtector::activate();
-    secure_logger::log_secure("[BOOT] ZE_MODE initialized");
+    if let Err(e) = secure_logger::log_secure("[BOOT] ZE_MODE initialized") {
+        eprintln!("[ERROR] Failed to log secure message: {}", e);
+    }
 
     let test_data = "memory_injection polymorphic xor_loop shellcode";
     if ZEProtector::inspect(test_data) 
@@ -17,9 +19,13 @@ fn main() {
         || ml_analyzer::analyze_behavior(test_data) 
     {
         println!("[ALERT] Multi-layer threat detected.");
-        secure_logger::log_secure("[ALERT] Threat blocked and logged.");
+        if let Err(e) = secure_logger::log_secure("[ALERT] Threat blocked and logged.") {
+            eprintln!("[ERROR] Failed to log secure message: {}", e);
+        }
     } else {
         println!("[OK] System is clean.");
-        secure_logger::log_secure("[OK] Scan completed successfully.");
+        if let Err(e) = secure_logger::log_secure("[OK] Scan completed successfully.") {
+            eprintln!("[ERROR] Failed to log secure message: {}", e);
+        }
     }
 }
