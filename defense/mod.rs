@@ -4,7 +4,7 @@ use std::{fs::File, collections::HashSet, io::Read};
 use log::{info, warn, error};
 use serde::Deserialize;
 use once_cell::sync::Lazy;
-use std::sync::Mutex;
+use std::sync::RwLock;
 use anyhow::{Result, Context};
 
 #[derive(Deserialize)]
@@ -12,12 +12,12 @@ struct SignatureDB {
     signatures: Vec<String>,
 }
 
-static SIGNATURES: Lazy<Mutex<HashSet<String>>> = Lazy::new(|| {
+static SIGNATURES: Lazy<RwLock<HashSet<String>>> = Lazy::new(|| {
     match load_signatures() {
-        Ok(set) => Mutex::new(set),
+        Ok(set) => RwLock::new(set),
         Err(e) => {
             error!("Failed to load signature DB: {:?}", e);
-            Mutex::new(HashSet::new())
+            RwLock::new(HashSet::new())
         }
     }
 });
@@ -48,7 +48,7 @@ impl Anomaly {
 
 impl ThreatAnalyzer for Anomaly {
     fn is_threat(&self) -> bool {
-let db = SIGNATURES.lock().unwrap();
+let db = SIGNATURES.read().unwrap_or_else(|p| p.into_inner());
         db.contains(&self.signature)
     }
     fn respond(&self) {
