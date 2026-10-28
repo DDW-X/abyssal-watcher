@@ -4,8 +4,9 @@ use aes_gcm::aead::{Aead, NewAead};
 use std::fs::OpenOptions;
 use std::io::Write;
 use crate::infra::secure_kms::{generate_key, generate_nonce};
+use anyhow::{Result, Context};
 
-pub fn log_secure(message: &str) {
+pub fn log_secure(message: &str) -> Result<()> {
     let key_bytes = generate_key();
     let nonce_bytes = generate_nonce();
 
@@ -13,11 +14,13 @@ pub fn log_secure(message: &str) {
     let cipher = Aes256Gcm::new(key);
     let nonce = Nonce::from_slice(&nonce_bytes);
 
-    let ciphertext = cipher.encrypt(nonce, message.as_bytes()).expect("encryption failed");
+    let ciphertext = cipher.encrypt(nonce, message.as_bytes())
+        .map_err(|e| anyhow::anyhow!("Encryption failed: {}", e))?;
     let mut file = OpenOptions::new()
         .append(true)
         .create(true)
         .open("secure.log")
-        .unwrap();
-    file.write_all(&ciphertext).unwrap();
+        .context("Failed to open secure.log")?;
+    file.write_all(&ciphertext).context("Failed to write to secure.log")?;
+    Ok(())
 }

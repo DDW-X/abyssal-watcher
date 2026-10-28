@@ -3,13 +3,14 @@ use defense::ze_mode::ZEProtector;
 use engine::threat_detector;
 use analyzer::ml_analyzer;
 use infra::secure_logger;
+use anyhow::Result;
 
-fn main() {
+fn main() -> Result<()> {
     if defense::anti_debug::is_debugger_present() {
-        println!("[ALERT] Debugger detected. Exiting."); return;
+        println!("[ALERT] Debugger detected. Exiting."); return Ok(());
     }
     ZEProtector::activate();
-    secure_logger::log_secure("[BOOT] ZE_MODE initialized");
+    secure_logger::log_secure("[BOOT] ZE_MODE initialized")?;
 
     let test_data = "memory_injection polymorphic xor_loop shellcode";
     if ZEProtector::inspect(test_data) 
@@ -17,9 +18,10 @@ fn main() {
         || ml_analyzer::analyze_behavior(test_data) 
     {
         println!("[ALERT] Multi-layer threat detected.");
-        secure_logger::log_secure("[ALERT] Threat blocked and logged.");
+        secure_logger::log_secure("[ALERT] Threat blocked and logged.")?;
     } else {
         println!("[OK] System is clean.");
-        secure_logger::log_secure("[OK] Scan completed successfully.");
+        secure_logger::log_secure("[OK] Scan completed successfully.")?;
     }
+    Ok(())
 }
