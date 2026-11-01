@@ -29,7 +29,7 @@ impl EbpfSensor {
         let _logger = EbpfLogger::init(&mut self.bpf).map_err(|_| anyhow::anyhow!("Failed to setup telemetry logging"))?;
 
         // Example: attach to a tracepoint (e.g., sys_enter_execve)
-        // let program: &mut TracePoint = self.bpf.program_mut("sys_enter_execve").unwrap().try_into()?;
+        // let program: &mut TracePoint = self.bpf.program_mut("sys_enter_execve").ok_or_else(|| anyhow::anyhow!("sys_enter_execve program not found"))?.try_into()?;
         // program.load()?;
         // program.attach("syscalls", "sys_enter_execve")?;
 
